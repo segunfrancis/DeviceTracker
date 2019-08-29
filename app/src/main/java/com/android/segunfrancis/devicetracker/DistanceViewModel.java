@@ -17,4 +17,12 @@ public class DistanceViewModel extends AndroidViewModel {
         mRepository = new DistanceRepository(application);
         mData = mRepository.getAllDistances();
     }
+
+    public LiveData<List<Distance>> getAllDistances() {
+        return mData;
+    }
+
+    public void insert(Distance distance) {
+        mRepository.insert(distance);
+    }
 }
