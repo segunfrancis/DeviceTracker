@@ -3,6 +3,7 @@ package com.android.segunfrancis.devicetracker;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Group;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
@@ -27,8 +28,10 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
     private TextView locationText;
-    private ProgressBar pb;
+    private TextView locationText2;
+    private Group mGroup;
     private Button startButton;
+    private Button stopButton;
     private boolean gpsStatus = false;
 
     private Location mLocation;
@@ -47,17 +50,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         enableRuntimePermission();
 
         locationText = findViewById(R.id.location_text);
-        pb = findViewById(R.id.progressBar);
+        locationText2 = findViewById(R.id.location_text_2);
+        mGroup = findViewById(R.id.group);
         startButton = findViewById(R.id.startTracking);
+        stopButton = findViewById(R.id.stopTracking);
 
-        pb.setVisibility(View.GONE);
+        stopButton.setEnabled(false);
+
+        mGroup.setVisibility(View.GONE);
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkGpsStatus();
-
-                pb.setVisibility(View.VISIBLE);
 
                 if (gpsStatus) {
                     if (holder != null) {
@@ -68,13 +73,38 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                             return;
                         }
                         mLocation = mLocationManager.getLastKnownLocation(holder);
-                        mLocationManager.requestLocationUpdates(holder, 4000, 3, MainActivity.this);
+                        Log.d(TAG, "onClick: " + mLocation);
+                        locationText.setText("Longitude: " + mLocation.getLongitude() + "\n" +
+                                "Latitude: " + mLocation.getLatitude());
+
+                        // Registering location Listener
+                        mLocationManager.requestLocationUpdates(holder, 0, 0, MainActivity.this);
+                        stopButton.setEnabled(true);
+                        startButton.setEnabled(false);
                     }
                 } else {
                     Toast.makeText(MainActivity.this, "Enable GPS", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                mLocation = mLocationManager.getLastKnownLocation(holder);
+                Log.d(TAG, "onClick: " + mLocation);
+                locationText2.setText("Longitude: " + mLocation.getLongitude() + "\n" +
+                        "Latitude: " + mLocation.getLatitude());
+                startButton.setEnabled(false);
+                stopButton.setEnabled(false);
+            }
+        });
+
+
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mCriteria = new Criteria();
         holder = mLocationManager.getBestProvider(mCriteria, false);
@@ -101,12 +131,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onLocationChanged(Location location) {
-        locationText.setText("");
+/*        locationText.setText("");
+        mGroup.setVisibility(View.GONE);
 
-        Toast.makeText(getBaseContext(), "Location changed:" + "\n" + "Lat: " + location.getLatitude() + "\n" +  " Lng: " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getBaseContext(), "Location changed:" + "\n" + "Lat: " + location.getLatitude() + "\n" +  " Lng: " + location.getLongitude(), Toast.LENGTH_SHORT).show();
         String coordinates = "Longitude: " + location.getLongitude() + "\n" + "Latitude: " + location.getLatitude();
         locationText.setText(coordinates);
-        Log.d(TAG, "onLocationChanged: " + coordinates);
+        Log.d(TAG, "onLocationChanged: " + coordinates);*/
     }
 
 
