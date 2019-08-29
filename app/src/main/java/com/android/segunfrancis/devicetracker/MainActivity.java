@@ -1,15 +1,11 @@
 package com.android.segunfrancis.devicetracker;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.Group;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -17,11 +13,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private TextView startLatitude;
     private TextView endLongitude;
     private TextView endLatitude;
-    private Group mGroup;
     private Button startButton;
     private Button stopButton;
     private boolean gpsStatus = false;
@@ -56,13 +51,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         endLatitude = findViewById(R.id.end_latitude_text);
         endLongitude = findViewById(R.id.end_longitude_text);
 
-        mGroup = findViewById(R.id.group);
         startButton = findViewById(R.id.startTracking);
         stopButton = findViewById(R.id.stopTracking);
 
         stopButton.setEnabled(false);
-
-        mGroup.setVisibility(View.GONE);
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,5 +156,21 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 }
                 break;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.distance_list) {
+            Intent intent = new Intent(MainActivity.this, DistanceActivity.class);
+            intent.putExtra("values", );
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

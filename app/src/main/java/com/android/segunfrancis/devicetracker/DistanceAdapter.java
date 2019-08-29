@@ -17,7 +17,6 @@ public class DistanceAdapter extends RecyclerView.Adapter<DistanceAdapter.Distan
     private List<Distance> mDistanceList;
     private LayoutInflater mInflater;
     private Context mContext;
-    private DistanceViewModel mViewModel;
 
     public DistanceAdapter(Context context) {
         this.mContext = context;
@@ -35,7 +34,9 @@ public class DistanceAdapter extends RecyclerView.Adapter<DistanceAdapter.Distan
     public void onBindViewHolder(@NonNull DistanceVIewHolder holder, int position) {
         if (mDistanceList != null) {
             Distance currentDistance = mDistanceList.get(position);
-
+            holder.distanceTextView.setText(currentDistance.getDistance());
+            holder.timeTextView.setText(currentDistance.getTime());
+            holder.dateTextView.setText(currentDistance.getDate());
         }
     }
 
@@ -49,6 +50,10 @@ public class DistanceAdapter extends RecyclerView.Adapter<DistanceAdapter.Distan
     public void setDistances(List<Distance> distances) {
         this.mDistanceList = distances;
         notifyDataSetChanged();
+    }
+
+    public Distance getDistanceAtposition(int position) {
+        return mDistanceList.get(position);
     }
 
     public class DistanceVIewHolder extends RecyclerView.ViewHolder {
