@@ -136,15 +136,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onLocationChanged(Location location) {
-/*        locationText.setText("");
-        mGroup.setVisibility(View.GONE);
-
-//        Toast.makeText(getBaseContext(), "Location changed:" + "\n" + "Lat: " + location.getLatitude() + "\n" +  " Lng: " + location.getLongitude(), Toast.LENGTH_SHORT).show();
-        String coordinates = "Longitude: " + location.getLongitude() + "\n" + "Latitude: " + location.getLatitude();
-        locationText.setText(coordinates);
-        Log.d(TAG, "onLocationChanged: " + coordinates);*/
     }
-
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
