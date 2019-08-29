@@ -1,11 +1,13 @@
 package com.android.segunfrancis.devicetracker;
 
+import java.io.Serializable;
+
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "distance_table")
-public class Distance {
+public class Distance implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String distance;
@@ -24,6 +26,10 @@ public class Distance {
         this.distance = distance;
         this.date = date;
         this.time = time;
+    }
+
+    @Ignore
+    public Distance() {
     }
 
     public int getId() {

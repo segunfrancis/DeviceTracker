@@ -168,7 +168,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.distance_list) {
             Intent intent = new Intent(MainActivity.this, DistanceActivity.class);
-            intent.putExtra("values", );
+            Distance distance = new Distance();
+            distance.setDistance("TEMP");
+            distance.setDate("11/12/2021");
+            distance.setTime("3:04 am");
+            intent.putExtra("values", distance);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
