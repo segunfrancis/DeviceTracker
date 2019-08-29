@@ -27,8 +27,10 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
-    private TextView locationText;
-    private TextView locationText2;
+    private TextView startLongitude;
+    private TextView startLatitude;
+    private TextView endLongitude;
+    private TextView endLatitude;
     private Group mGroup;
     private Button startButton;
     private Button stopButton;
@@ -49,8 +51,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         enableRuntimePermission();
 
-        locationText = findViewById(R.id.location_text);
-        locationText2 = findViewById(R.id.location_text_2);
+        startLatitude = findViewById(R.id.start_latitude_text);
+        startLongitude = findViewById(R.id.start_longitude_text);
+        endLatitude = findViewById(R.id.end_latitude_text);
+        endLongitude = findViewById(R.id.end_longitude_text);
+
         mGroup = findViewById(R.id.group);
         startButton = findViewById(R.id.startTracking);
         stopButton = findViewById(R.id.stopTracking);
@@ -74,8 +79,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                         }
                         mLocation = mLocationManager.getLastKnownLocation(holder);
                         Log.d(TAG, "onClick: " + mLocation);
-                        locationText.setText("Longitude: " + mLocation.getLongitude() + "\n" +
-                                "Latitude: " + mLocation.getLatitude());
+                        startLongitude.setText(String.valueOf(mLocation.getLongitude()));
+                        startLatitude.setText(String.valueOf(mLocation.getLatitude()));
 
                         // Registering location Listener
                         mLocationManager.requestLocationUpdates(holder, 0, 0, MainActivity.this);
@@ -97,8 +102,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 }
                 mLocation = mLocationManager.getLastKnownLocation(holder);
                 Log.d(TAG, "onClick: " + mLocation);
-                locationText2.setText("Longitude: " + mLocation.getLongitude() + "\n" +
-                        "Latitude: " + mLocation.getLatitude());
+                endLongitude.setText(String.valueOf(mLocation.getLongitude()));
+                endLatitude.setText(String.valueOf(mLocation.getLatitude()));
                 startButton.setEnabled(false);
                 stopButton.setEnabled(false);
             }
