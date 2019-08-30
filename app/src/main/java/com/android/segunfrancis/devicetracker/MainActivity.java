@@ -71,79 +71,70 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         mContext = getApplicationContext();
         checkGpsStatus();
 
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkGpsStatus();
+        startButton.setOnClickListener(view -> {
+            checkGpsStatus();
 
-                if (gpsStatus) {
-                    if (holder != null) {
-                        if (ActivityCompat.checkSelfPermission(MainActivity.this,
-                                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                                && ActivityCompat.checkSelfPermission(MainActivity.this,
-                                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            return;
-                        }
-
-                        // Registering location Listener
-                        mLocationManager.requestLocationUpdates(holder, 0, 0, MainActivity.this);
-
-                        mLocation = mLocationManager.getLastKnownLocation(holder);
-                        Log.d(TAG, "onClick: " + mLocation);
-
-                        startLatitude.setText(String.valueOf(mLocation.getLatitude()));
-                        startLongitude.setText(String.valueOf(mLocation.getLongitude()));
-                        stopButton.setEnabled(true);
-                        startButton.setEnabled(false);
+            if (gpsStatus) {
+                if (holder != null) {
+                    if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                            Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(MainActivity.this,
+                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
                     }
-                } else {
-                    Toast.makeText(MainActivity.this, "Enable GPS", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
+
+                    // Registering location Listener
+                    mLocationManager.requestLocationUpdates(holder, 0, 0, MainActivity.this);
+
+                    mLocation = mLocationManager.getLastKnownLocation(holder);
+                    Log.d(TAG, "onClick: " + mLocation);
+
+                    startLatitude.setText(String.valueOf(mLocation.getLatitude()));
+                    startLongitude.setText(String.valueOf(mLocation.getLongitude()));
+                    stopButton.setEnabled(true);
+                    startButton.setEnabled(false);
                 }
-            }
-        });
-
-        stopButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                mLocation = mLocationManager.getLastKnownLocation(holder);
-                Log.d(TAG, "onClick: " + mLocation);
-                endLongitude.setText(String.valueOf(mLocation.getLongitude()));
-                endLatitude.setText(String.valueOf(mLocation.getLatitude()));
-                startButton.setEnabled(false);
-                stopButton.setEnabled(false);
-                saveButton.setVisibility(View.VISIBLE);
-
-                // Convert longitude and latitude strings back to floats
-                double startLongitudeFloat = Double.parseDouble(startLongitude.getText().toString());
-                double startLatitudeFloat = Double.parseDouble(startLatitude.getText().toString());
-                double endLongitudeFloat = Double.parseDouble(endLongitude.getText().toString());
-                double endLatitudeFloat = Double.parseDouble(endLatitude.getText().toString());
-                double estimatedDistance = getDistanceBetweenTwoPoints(startLongitudeFloat, startLatitudeFloat, endLongitudeFloat, endLatitudeFloat);
-                totalDistance.setText(String.valueOf(estimatedDistance));
-
-                // Remove updates
-                mLocationManager.removeUpdates(MainActivity.this);
-            }
-        });
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String distance = totalDistance.getText().toString();
-                String date = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
-                String time = new SimpleDateFormat("h:mm a").format(Calendar.getInstance().getTime());
-                Distance distanceObject = new Distance(distance, date, time);
-                Intent intent = new Intent(MainActivity.this, DistanceActivity.class);
-                intent.putExtra("values", distanceObject);
-                Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(MainActivity.this, "Enable GPS", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             }
+        });
+
+        stopButton.setOnClickListener(view -> {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            mLocation = mLocationManager.getLastKnownLocation(holder);
+            Log.d(TAG, "onClick: " + mLocation);
+            endLongitude.setText(String.valueOf(mLocation.getLongitude()));
+            endLatitude.setText(String.valueOf(mLocation.getLatitude()));
+            startButton.setEnabled(false);
+            stopButton.setEnabled(false);
+            saveButton.setVisibility(View.VISIBLE);
+
+            // Convert longitude and latitude strings back to floats
+            double startLongitudeFloat = Double.parseDouble(startLongitude.getText().toString());
+            double startLatitudeFloat = Double.parseDouble(startLatitude.getText().toString());
+            double endLongitudeFloat = Double.parseDouble(endLongitude.getText().toString());
+            double endLatitudeFloat = Double.parseDouble(endLatitude.getText().toString());
+            double estimatedDistance = getDistanceBetweenTwoPoints(startLongitudeFloat, startLatitudeFloat, endLongitudeFloat, endLatitudeFloat);
+            totalDistance.setText(String.valueOf(estimatedDistance));
+
+            // Remove updates
+            mLocationManager.removeUpdates(MainActivity.this);
+        });
+
+        saveButton.setOnClickListener(view -> {
+            String distance = totalDistance.getText().toString();
+            String date = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+            String time = new SimpleDateFormat("h:mm a").format(Calendar.getInstance().getTime());
+            Distance distanceObject = new Distance(distance, date, time);
+            Intent intent = new Intent(MainActivity.this, DistanceActivity.class);
+            intent.putExtra("values", distanceObject);
+            Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
+            startActivity(intent);
         });
     }
 

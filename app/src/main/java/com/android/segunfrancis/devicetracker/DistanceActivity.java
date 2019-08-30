@@ -55,18 +55,10 @@ public class DistanceActivity extends AppCompatActivity {
     private void confirmDelete() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to delete all entries?");
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mViewModel.deleteAllEntries();
-                dialogInterface.dismiss();
-            }
-        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
+        builder.setPositiveButton("YES", (dialogInterface, i) -> {
+            mViewModel.deleteAllEntries();
+            dialogInterface.dismiss();
+        }).setNegativeButton("NO", (dialogInterface, i) -> dialogInterface.dismiss());
         AlertDialog dialog = builder.create();
         dialog.show();
     }
