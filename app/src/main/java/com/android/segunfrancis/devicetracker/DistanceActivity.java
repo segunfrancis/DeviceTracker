@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 public class DistanceActivity extends AppCompatActivity {
 
+    public static final String VALUES = "values";
     private DistanceViewModel mViewModel;
 
     @Override
@@ -23,7 +24,7 @@ public class DistanceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_distance);
 
         Intent intent = getIntent();
-        Distance distance = (Distance) intent.getSerializableExtra("values");
+        Distance distance = (Distance) intent.getSerializableExtra(VALUES);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         DistanceAdapter adapter = new DistanceAdapter(DistanceActivity.this);
@@ -54,7 +55,7 @@ public class DistanceActivity extends AppCompatActivity {
 
     private void confirmDelete() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to delete all entries?");
+        builder.setMessage(getResources().getString(R.string.confirm_delete_message));
         builder.setPositiveButton("YES", (dialogInterface, i) -> {
             mViewModel.deleteAllEntries();
             dialogInterface.dismiss();

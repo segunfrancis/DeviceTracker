@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         mContext = getApplicationContext();
         checkGpsStatus();
 
+        // Start distance tracking
         startButton.setOnClickListener(view -> {
             checkGpsStatus();
 
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         });
 
+        // Stop distance tracking
         stopButton.setOnClickListener(view -> {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -126,13 +128,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             mLocationManager.removeUpdates(MainActivity.this);
         });
 
+        // Save distance covered
         saveButton.setOnClickListener(view -> {
             String distance = totalDistance.getText().toString();
             String date = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
             String time = new SimpleDateFormat("h:mm a").format(Calendar.getInstance().getTime());
             Distance distanceObject = new Distance(distance, date, time);
             Intent intent = new Intent(MainActivity.this, DistanceActivity.class);
-            intent.putExtra("values", distanceObject);
+            intent.putExtra(DistanceActivity.VALUES, distanceObject);
             Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
             startActivity(intent);
         });

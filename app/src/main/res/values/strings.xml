@@ -1,4 +1,18 @@
 <resources>
     <string name="app_name">Device Tracker</string>
     <string name="title_activity_maps">Map</string>
+    <string name="stop_button_string">Stop</string>
+    <string name="start_button_string">Start</string>
+    <string name="save_button_string">Save</string>
+    <string name="end_location_text_string">End Location</string>
+    <string name="total_distance_text_string">Total Distance</string>
+    <string name="longitude_text_string">Longitude:</string>
+    <string name="latitude_text_string">Latitude:</string>
+    <string name="start_location_text_string">Start Location</string>
+    <string name="distance_text_string">Distance:</string>
+    <string name="delete_all_entries_string">Delete All Entries</string>
+    <string name="view_distances_string">View Distances</string>
+    <string name="clear_fields_string">Clear Fields</string>
+    <string name="distance_activity_label">Distance</string>
+    <string name="confirm_delete_message">Are you sure you want to delete all entries?</string>
 </resources>
