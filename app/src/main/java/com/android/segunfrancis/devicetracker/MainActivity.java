@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         } else {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_CODE);
-
         }
     }
 
@@ -181,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         switch (requestCode) {
             case REQUEST_PERMISSION_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(MainActivity.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onRequestPermissionsResult: Permission Granted");
                 } else {
                     Toast.makeText(MainActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
                 }

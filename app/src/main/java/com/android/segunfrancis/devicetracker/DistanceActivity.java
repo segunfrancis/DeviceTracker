@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class DistanceActivity extends AppCompatActivity {
 
@@ -59,6 +59,8 @@ public class DistanceActivity extends AppCompatActivity {
         builder.setPositiveButton("YES", (dialogInterface, i) -> {
             mViewModel.deleteAllEntries();
             dialogInterface.dismiss();
+            Toast.makeText(DistanceActivity.this, "Deleting...", Toast.LENGTH_SHORT).show();
+            finish();
         }).setNegativeButton("NO", (dialogInterface, i) -> dialogInterface.dismiss());
         AlertDialog dialog = builder.create();
         dialog.show();
