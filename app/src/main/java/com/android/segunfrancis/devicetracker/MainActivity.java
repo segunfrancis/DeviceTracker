@@ -199,6 +199,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        // Clearing the fields when save button is pressed
+        if (saveButton.getVisibility() == View.VISIBLE) {
+            clearFields();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -233,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     // Clearing all the values in the text views and
-    // restoring the original state of the buttons
+    // restoring the initial state of the buttons
     private void clearFields() {
         startLongitude.setText("");
         startLatitude.setText("");
@@ -243,5 +252,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         startButton.setEnabled(true);
         stopButton.setEnabled(false);
         saveButton.setVisibility(View.GONE);
+        unit.setVisibility(View.GONE);
     }
 }
