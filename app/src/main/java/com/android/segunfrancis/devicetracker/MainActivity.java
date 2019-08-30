@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,14 +22,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
     private TextView startLongitude;
     private TextView startLatitude;
     private TextView endLongitude;
     private TextView endLatitude;
+    private TextView totalDistance;
     private Button startButton;
     private Button stopButton;
+    private Button saveButton;
     private boolean gpsStatus = false;
 
     private Location mLocation;
@@ -50,11 +55,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         startLongitude = findViewById(R.id.start_longitude_text);
         endLatitude = findViewById(R.id.end_latitude_text);
         endLongitude = findViewById(R.id.end_longitude_text);
+        totalDistance = findViewById(R.id.total_distance_text);
 
         startButton = findViewById(R.id.startTracking);
         stopButton = findViewById(R.id.stopTracking);
+        saveButton = findViewById(R.id.saveButton);
 
         stopButton.setEnabled(false);
+
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mCriteria = new Criteria();
+        holder = mLocationManager.getBestProvider(mCriteria, false);
+        mContext = getApplicationContext();
+        checkGpsStatus();
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,18 +82,22 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             return;
                         }
-                        mLocation = mLocationManager.getLastKnownLocation(holder);
-                        Log.d(TAG, "onClick: " + mLocation);
-                        startLongitude.setText(String.valueOf(mLocation.getLongitude()));
-                        startLatitude.setText(String.valueOf(mLocation.getLatitude()));
 
                         // Registering location Listener
                         mLocationManager.requestLocationUpdates(holder, 0, 0, MainActivity.this);
+
+                        mLocation = mLocationManager.getLastKnownLocation(holder);
+                        Log.d(TAG, "onClick: " + mLocation);
+
+                        startLatitude.setText(String.valueOf(mLocation.getLatitude()));
+                        startLongitude.setText(String.valueOf(mLocation.getLongitude()));
                         stopButton.setEnabled(true);
                         startButton.setEnabled(false);
                     }
                 } else {
                     Toast.makeText(MainActivity.this, "Enable GPS", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
                 }
             }
         });
@@ -98,16 +115,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 endLatitude.setText(String.valueOf(mLocation.getLatitude()));
                 startButton.setEnabled(false);
                 stopButton.setEnabled(false);
+                saveButton.setVisibility(View.VISIBLE);
+
+                // Convert longitude and latitude strings back to floats
+                double startLongitudeFloat = Double.parseDouble(startLongitude.getText().toString());
+                double startLatitudeFloat = Double.parseDouble(startLatitude.getText().toString());
+                double endLongitudeFloat = Double.parseDouble(endLongitude.getText().toString());
+                double endLatitudeFloat = Double.parseDouble(endLatitude.getText().toString());
+                double estimatedDistance = getDistanceBetweenTwoPoints(startLongitudeFloat, startLatitudeFloat, endLongitudeFloat, endLatitudeFloat);
+                totalDistance.setText(String.valueOf(estimatedDistance));
+
+                // Remove updates
+                mLocationManager.removeUpdates(MainActivity.this);
             }
         });
-
-
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mCriteria = new Criteria();
-        holder = mLocationManager.getBestProvider(mCriteria, false);
-        mContext = getApplicationContext();
-
-        checkGpsStatus();
     }
 
     private void enableRuntimePermission() {
@@ -159,6 +180,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        // Remove updates
+        mLocationManager.removeUpdates(MainActivity.this);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -166,7 +194,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.distance_list) {
+        int id = item.getItemId();
+        if (id == R.id.distance_list) {
             Intent intent = new Intent(MainActivity.this, DistanceActivity.class);
             Distance distance = new Distance();
             distance.setDistance("TEMP");
@@ -174,7 +203,36 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             distance.setTime("3:04 am");
             intent.putExtra("values", distance);
             startActivity(intent);
+        } else if (id == R.id.reset) {
+            clearFields();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // Calculating the distance covered by the device
+    private double getDistanceBetweenTwoPoints(double longStart, double latStart, double longEnd, double latEnd) {
+        int radiusOfEarth = 6371000; // meters
+        double dLat = Math.toRadians(latEnd - latStart);
+        double dLong = Math.toRadians(longEnd - longStart);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(latStart))
+                * Math.cos(Math.toRadians(latEnd)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        DecimalFormat newFormat = new DecimalFormat("#.##");
+        double meter = Double.valueOf(newFormat.format(radiusOfEarth * c));
+        Log.d(TAG, "getDistanceBetweenTwoPoints: " + meter);
+        return meter;
+    }
+
+    // Clearing all the values in the text views and
+    // restoring the original state of the buttons
+    private void clearFields() {
+        startLongitude.setText("");
+        startLatitude.setText("");
+        endLongitude.setText("");
+        endLatitude.setText("");
+        totalDistance.setText("");
+        startButton.setEnabled(true);
+        stopButton.setEnabled(false);
+        saveButton.setVisibility(View.GONE);
     }
 }
