@@ -35,7 +35,16 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintStart_toEndOf="@+id/textVIew1"
             app:layout_constraintTop_toTopOf="@+id/textVIew1"
-            tools:text="11.28735m" />
+            tools:text="11.28735" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/meter"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintBottom_toBottomOf="@+id/total_distance_item_text"
+            app:layout_constraintStart_toEndOf="@+id/total_distance_item_text"
+            app:layout_constraintTop_toTopOf="@+id/total_distance_item_text" />
 
         <TextView
             android:id="@+id/date_text"

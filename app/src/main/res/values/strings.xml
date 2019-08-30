@@ -15,4 +15,5 @@
     <string name="clear_fields_string">Clear Fields</string>
     <string name="distance_activity_label">Distance</string>
     <string name="confirm_delete_message">Are you sure you want to delete all entries?</string>
+    <string name="meter">m</string>
 </resources>

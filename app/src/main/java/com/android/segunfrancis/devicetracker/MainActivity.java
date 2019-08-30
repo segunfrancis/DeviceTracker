@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private TextView endLongitude;
     private TextView endLatitude;
     private TextView totalDistance;
+    private TextView unit;
     private Button startButton;
     private Button stopButton;
     private Button saveButton;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         endLatitude = findViewById(R.id.end_latitude_text);
         endLongitude = findViewById(R.id.end_longitude_text);
         totalDistance = findViewById(R.id.total_distance_text);
+        unit = findViewById(R.id.unit);
 
         startButton = findViewById(R.id.startTracking);
         stopButton = findViewById(R.id.stopTracking);
@@ -115,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             startButton.setEnabled(false);
             stopButton.setEnabled(false);
             saveButton.setVisibility(View.VISIBLE);
+            unit.setVisibility(View.VISIBLE);
 
             // Convert longitude and latitude strings back to floats
             double startLongitudeFloat = Double.parseDouble(startLongitude.getText().toString());
