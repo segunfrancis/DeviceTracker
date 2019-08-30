@@ -25,4 +25,8 @@ public class DistanceViewModel extends AndroidViewModel {
     public void insert(Distance distance) {
         mRepository.insert(distance);
     }
+
+    public void deleteAllEntries() {
+        mRepository.deleteAllEntries();
+    }
 }

@@ -15,4 +15,7 @@ public interface DistanceDao {
 
     @Query("SELECT * from distance_table ORDER BY id DESC")
     LiveData<List<Distance>> getAllDistances();
+
+    @Query("DELETE from distance_table")
+    void deleteAllEntries();
 }

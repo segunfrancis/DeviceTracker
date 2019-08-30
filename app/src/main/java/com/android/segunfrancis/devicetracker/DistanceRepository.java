@@ -25,6 +25,10 @@ public class DistanceRepository {
         new insertAsyncTask(mDistanceDao).execute(distance);
     }
 
+    public void deleteAllEntries() {
+        new deleteAllEntriesAsyncTask(mDistanceDao).execute();
+    }
+
     public static class insertAsyncTask extends AsyncTask<Distance, Void, Void> {
         private DistanceDao mDistanceDao;
 
@@ -35,6 +39,20 @@ public class DistanceRepository {
         @Override
         protected Void doInBackground(Distance... distances) {
             mDistanceDao.insert(distances[0]);
+            return null;
+        }
+    }
+
+    public static class deleteAllEntriesAsyncTask extends AsyncTask<Void, Void, Void> {
+        private DistanceDao mDistanceDao;
+
+        public deleteAllEntriesAsyncTask(DistanceDao distanceDao) {
+            this.mDistanceDao = distanceDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mDistanceDao.deleteAllEntries();
             return null;
         }
     }

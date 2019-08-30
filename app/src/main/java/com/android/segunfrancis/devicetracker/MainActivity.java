@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
@@ -129,6 +131,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 mLocationManager.removeUpdates(MainActivity.this);
             }
         });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String distance = totalDistance.getText().toString();
+                String date = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+                String time = new SimpleDateFormat("h:mm a").format(Calendar.getInstance().getTime());
+                Distance distanceObject = new Distance(distance, date, time);
+                Intent intent = new Intent(MainActivity.this, DistanceActivity.class);
+                intent.putExtra("values", distanceObject);
+                Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+            }
+        });
     }
 
     private void enableRuntimePermission() {
@@ -197,11 +213,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         int id = item.getItemId();
         if (id == R.id.distance_list) {
             Intent intent = new Intent(MainActivity.this, DistanceActivity.class);
-            Distance distance = new Distance();
-            distance.setDistance("TEMP");
-            distance.setDate("11/12/2021");
-            distance.setTime("3:04 am");
-            intent.putExtra("values", distance);
             startActivity(intent);
         } else if (id == R.id.reset) {
             clearFields();
@@ -214,8 +225,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         int radiusOfEarth = 6371000; // meters
         double dLat = Math.toRadians(latEnd - latStart);
         double dLong = Math.toRadians(longEnd - longStart);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(latStart))
-                * Math.cos(Math.toRadians(latEnd)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(latStart))
+                * Math.cos(Math.toRadians(latEnd))
+                * Math.sin(dLong / 2) * Math.sin(dLong / 2);
         double c = 2 * Math.asin(Math.sqrt(a));
         DecimalFormat newFormat = new DecimalFormat("#.##");
         double meter = Double.valueOf(newFormat.format(radiusOfEarth * c));
